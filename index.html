@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ad Campaign UI</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.4.15/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    nav button {
+      margin: 0 5px;
+      padding: 5px 10px;
+    }
+    #app {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    canvas {
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <nav>
+      <button @click="switchTab('Dashboard')">Dashboard</button>
+      <button @click="switchTab('ChatBot')">ChatBot</button>
+      <button @click="switchTab('Automate')">Automate</button>
+    </nav>
+
+    <div v-if="activeTab === 'Dashboard'">
+      <h2>Dashboard</h2>
+      <canvas id="barChart"></canvas>
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <div v-if="activeTab === 'ChatBot'">
+      <h2>ChatBot</h2>
+      <p><strong>User:</strong> How can I improve my ads this week?</p>
+      <p><strong>Bot:</strong> Based on the data, your video content has created better ROI.<br>
+         Would you like tips for your next launch?</p>
+    </div>
+
+    <div v-if="activeTab === 'Automate'">
+      <h2>Automate</h2>
+      <p><strong>Upload your ads here:</strong></p>
+      <input type="file"><br><br>
+      <p><strong>Select where to launch ads:</strong></p>
+      <label><input type="checkbox"> Instagram</label><br>
+      <label><input type="checkbox"> Facebook</label><br>
+      <label><input type="checkbox"> Google</label><br>
+      <label><input type="checkbox"> Emails</label><br>
+      <label><input type="checkbox"> LinkedIn</label><br>
+      <label><input type="checkbox"> YouTube</label><br>
+      <label><input type="checkbox"> TikTok</label><br>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          activeTab: 'Dashboard'
+        };
+      },
+      methods: {
+        switchTab(tab) {
+          this.activeTab = tab;
+          if (tab === 'Dashboard') {
+            this.$nextTick(() => {
+              this.renderCharts();
+            });
+          }
+        },
+        renderCharts() {
+          // Destroy old charts if needed here (optional for dynamic use)
+
+          // Bar Chart
+          const ctx1 = document.getElementById('barChart');
+          if (ctx1) {
+            new Chart(ctx1, {
+              type: 'bar',
+              data: {
+                labels: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+                datasets: [
+                  { label: 'Series 1', data: [20, 30, 40, 50], backgroundColor: 'lightblue' },
+                  { label: 'Series 2', data: [10, 20, 30, 40], backgroundColor: 'blue' },
+                  { label: 'Series 3', data: [5, 15, 25, 35], backgroundColor: 'darkblue' }
+                ]
+              },
+              options: {
+                responsive: true
+              }
+            });
+          }
+
+          // Pie Chart
+          const ctx2 = document.getElementById('pieChart');
+          if (ctx2) {
+            new Chart(ctx2, {
+              type: 'doughnut',
+              data: {
+                labels: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'],
+                datasets: [{
+                  data: [20, 20, 20, 20, 20],
+                  backgroundColor: ['blue', 'lightblue', 'darkblue', 'grey', 'black']
+                }]
+              },
+              options: {
+                responsive: true
+              }
+            });
+          }
+        }
+      },
+      mounted() {
+        this.renderCharts();
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
